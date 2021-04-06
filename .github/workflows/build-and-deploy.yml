@@ -33,7 +33,7 @@ jobs:
       - name: "Build and push front image"
         uses: docker/build-push-action@v2
         with:
-          dockerfile: front/Dockerfile
+          file: front/Dockerfile
           path: ./
           push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/spaces-front:latest
@@ -62,7 +62,7 @@ jobs:
       - name: "Build and push front image"
         uses: docker/build-push-action@v2
         with:
-          dockerfile: back/Dockerfile
+          file: back/Dockerfile
           path: ./
           push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/spaces-back:latest
@@ -91,7 +91,7 @@ jobs:
       - name: "Build and push front image"
         uses: docker/build-push-action@v2
         with:
-          dockerfile: pusher/Dockerfile
+          file: pusher/Dockerfile
           path: ./
           push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/spaces-pusher:latest
@@ -120,7 +120,7 @@ jobs:
       - name: "Build and push front image"
         uses: docker/build-push-action@v2
         with:
-          dockerfile: uploader/Dockerfile
+          file: uploader/Dockerfile
           path: ./
           tags: ${{ steps.login-ecr.outputs.registry }}/spaces-uploader:latest
           add_git_labels: true
