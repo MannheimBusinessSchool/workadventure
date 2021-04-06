@@ -30,15 +30,13 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - uses: rlespinasse/github-slug-action@3.1.0
-
       - name: "Build and push front image"
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
           dockerfile: front/Dockerfile
           path: ./
-          repository: ${{ steps.login-ecr.outputs.registry }}/spaces-front
-          tags: ${{ env.GITHUB_REF_SLUG }}
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-front:latest
           add_git_labels: true
 
   build-back:
@@ -61,15 +59,13 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - uses: rlespinasse/github-slug-action@3.1.0
-
       - name: "Build and push front image"
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
           dockerfile: back/Dockerfile
           path: ./
-          repository: ${{ steps.login-ecr.outputs.registry }}/spaces-back
-          tags: ${{ env.GITHUB_REF_SLUG }}
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-back:latest
           add_git_labels: true
 
   build-pusher:
@@ -92,15 +88,13 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - uses: rlespinasse/github-slug-action@3.1.0
-
       - name: "Build and push front image"
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
           dockerfile: pusher/Dockerfile
           path: ./
-          repository: ${{ steps.login-ecr.outputs.registry }}/spaces-pusher
-          tags: ${{ env.GITHUB_REF_SLUG }}
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-pusher:latest
           add_git_labels: true
 
   build-uploader:
@@ -123,14 +117,11 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - uses: rlespinasse/github-slug-action@3.1.0
-
       - name: "Build and push front image"
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
           dockerfile: uploader/Dockerfile
           path: ./
-          repository: ${{ steps.login-ecr.outputs.registry }}/spaces-uploader
-          tags: ${{ env.GITHUB_REF_SLUG }}
+          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-uploader:latest
           add_git_labels: true
 
