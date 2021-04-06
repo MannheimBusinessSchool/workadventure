@@ -17,7 +17,17 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+        
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
 
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
       # Create a slugified value of the branch
       - uses: rlespinasse/github-slug-action@3.1.0
@@ -27,9 +37,7 @@ jobs:
         with:
           dockerfile: front/Dockerfile
           path: ./
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: thecodingmachine/workadventure-front
+          repository: ${{ steps.login-ecr.outputs.registry }}/spaces-front
           tags: ${{ env.GITHUB_REF_SLUG }}
           add_git_labels: true
 
@@ -41,18 +49,27 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+        
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
       # Create a slugified value of the branch
       - uses: rlespinasse/github-slug-action@3.1.0
 
-      - name: "Build and push back image"
+      - name: "Build and push front image"
         uses: docker/build-push-action@v1
         with:
           dockerfile: back/Dockerfile
           path: ./
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: thecodingmachine/workadventure-back
+          repository: ${{ steps.login-ecr.outputs.registry }}/spaces-back
           tags: ${{ env.GITHUB_REF_SLUG }}
           add_git_labels: true
 
@@ -64,18 +81,27 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+        
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
       # Create a slugified value of the branch
       - uses: rlespinasse/github-slug-action@3.1.0
 
-      - name: "Build and push back image"
+      - name: "Build and push front image"
         uses: docker/build-push-action@v1
         with:
           dockerfile: pusher/Dockerfile
           path: ./
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: thecodingmachine/workadventure-pusher
+          repository: ${{ steps.login-ecr.outputs.registry }}/spaces-pusher
           tags: ${{ env.GITHUB_REF_SLUG }}
           add_git_labels: true
 
@@ -87,30 +113,17 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
-
-      # Create a slugified value of the branch
-      - uses: rlespinasse/github-slug-action@3.1.0
-
-      - name: "Build and push back image"
-        uses: docker/build-push-action@v1
+        
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          dockerfile: uploader/Dockerfile
-          path: ./
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: thecodingmachine/workadventure-uploader
-          tags: ${{ env.GITHUB_REF_SLUG }}
-          add_git_labels: true
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
 
-  build-maps:
-
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - name: Checkout
-        uses: actions/checkout@v2
-
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
       # Create a slugified value of the branch
       - uses: rlespinasse/github-slug-action@3.1.0
@@ -118,47 +131,9 @@ jobs:
       - name: "Build and push front image"
         uses: docker/build-push-action@v1
         with:
-          dockerfile: maps/Dockerfile
-          path: maps/
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: thecodingmachine/workadventure-maps
+          dockerfile: uploader/Dockerfile
+          path: ./
+          repository: ${{ steps.login-ecr.outputs.registry }}/spaces-uploader
           tags: ${{ env.GITHUB_REF_SLUG }}
           add_git_labels: true
 
-  deeploy:
-    needs:
-      - build-front
-      - build-back
-      - build-pusher
-      - build-maps
-      - build-uploader
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      # Create a slugified value of the branch
-      - uses: rlespinasse/github-slug-action@3.1.0
-
-      - name: Deploy
-        uses: thecodingmachine/deeployer-action@master
-        env:
-          KUBE_CONFIG_FILE: ${{ secrets.KUBE_CONFIG_FILE }}
-          ADMIN_API_TOKEN: ${{ secrets.ADMIN_API_TOKEN }}
-          JITSI_ISS: ${{ secrets.JITSI_ISS }}
-          JITSI_URL: ${{ secrets.JITSI_URL }}
-          SECRET_JITSI_KEY: ${{ secrets.SECRET_JITSI_KEY }}
-          TURN_STATIC_AUTH_SECRET: ${{ secrets.TURN_STATIC_AUTH_SECRET }}
-        with:
-          namespace: workadventure-${{ env.GITHUB_REF_SLUG }}
-
-      - name: Add a comment in PR
-        uses: unsplash/comment-on-pr@v1.2.0
-        if: ${{ env.GITHUB_REF_SLUG != 'master' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          msg: Environment deployed at https://play.${{ env.GITHUB_REF_SLUG }}.workadventure.test.thecodingmachine.com
-          check_for_duplicate_msg: true
