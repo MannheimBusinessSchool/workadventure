@@ -14,7 +14,6 @@ set -o pipefail
 # make functions inherit ERR-traps, so that they fire when set -e takes effect there
 set -E
 
-aws configure
 ./templater.sh
 yarn run build
 aws s3 sync dist "s3://$S3_BUCKET" --delete --acl public-read
