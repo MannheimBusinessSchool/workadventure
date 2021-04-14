@@ -122,6 +122,7 @@ jobs:
         with:
           file: uploader/Dockerfile
           path: ./
+          push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/spaces-uploader:latest
           add_git_labels: true
 
