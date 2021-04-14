@@ -17,4 +17,4 @@ set -E
 aws configure
 ./templater.sh
 yarn run build
-aws s3 sync dist "$S3_BUCKET" --delete --acl public-read
+aws s3 sync dist "s3://$S3_BUCKET" --delete --acl public-read
