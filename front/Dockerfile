@@ -1,13 +1,13 @@
-FROM thecodingmachine/workadventure-back-base:latest as builder
+FROM thecodingmachine/workadventure-back-base:latest as message-builder
 WORKDIR /var/www/messages
 COPY --chown=docker:docker messages .
 RUN yarn install && yarn proto
 
 # we are rebuilding on each deploy to cope with the PUSHER_URL environment URL
-FROM thecodingmachine/nodejs:14-apache
+FROM node:15-stretch
 
 COPY --chown=docker:docker front .
-COPY --from=builder --chown=docker:docker /var/www/messages/generated /var/www/html/src/Messages/generated
+COPY --from=message-builder --chown=docker:docker /var/www/messages/generated ./src/Messages/generated
 
 # Removing the iframe.html file from the final image as this adds a XSS attack.
 # iframe.html is only in dev mode to circumvent a limitation
@@ -15,7 +15,10 @@ RUN rm dist/iframe.html
 
 RUN yarn install
 
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip
+RUN ./aws/install && aws --version
+
+RUN chmod +x ./build.sh
+
 ENV NODE_ENV=production
-ENV STARTUP_COMMAND_0="./templater.sh"
-ENV STARTUP_COMMAND_1="yarn run build"
-ENV APACHE_DOCUMENT_ROOT=dist/
+CMD ["./build.sh"]
