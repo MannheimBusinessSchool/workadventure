@@ -44,22 +44,23 @@ body .message-info.warning{
 .video-container i{
     position: absolute;
     width: 100px;
-    height: 65px;
+    height: 100px;
     left: calc(50% - 50px);
     top: calc(50% - 50px);
     background-color: black;
     border-radius: 50%;
     text-align: center;
-    padding-top: 35px;
+    padding-top: 32px;
     font-size: 28px;
     color: white;
+    overflow: hidden;
 }
 
 .video-container img{
     position: absolute;
     display: none;
-    width: 25px;
-    height: 25px;
+    width: 40px;
+    height: 40px;
     left: 5px;
     bottom: 5px;
     padding: 10px;
@@ -108,10 +109,12 @@ body .message-info.warning{
     margin: 0;
     padding: 0;
     cursor: url('/resources/logos/cursor_pointer.png'), pointer;
+    width: 25px;
+    height: 25px;
 }
 .video-container button.report span{
     position: absolute;
-    bottom: 8px;
+    bottom: 6px;
     left: 36px;
     color: white;
     font-size: 16px;
@@ -136,8 +139,9 @@ body .message-info.warning{
 #div-myCamVideo {
     position: absolute;
     right: 15px;
-    bottom: 15px;
+    bottom: 30px;
     border-radius: 15px 15px 15px 15px;
+    max-height: 200px;
 }
 
 video#myCamVideo{
@@ -151,6 +155,7 @@ video#myCamVideo{
 
 
 .btn-cam-action {
+    pointer-events: all;
     position: absolute;
     bottom: 0px;
     right: 0px;
@@ -167,7 +172,7 @@ video#myCamVideo{
     background: #666;
     box-shadow: 2px 2px 24px #444;
     border-radius: 48px;
-    transform: translateY(40px);
+    transform: translateY(20px);
     transition-timing-function: ease-in-out;
     bottom: 20px;
 }
@@ -183,21 +188,29 @@ video#myCamVideo{
 .btn-cam-action div:hover{
     background: #407cf7;
     box-shadow: 4px 4px 48px #666;
-    transition: 280ms;
+    transition: 120ms;
 }
 .btn-micro{
+    pointer-events: auto;
     transition: all .3s;
     right: 44px;
 }
 .btn-video{
+    pointer-events: auto;
     transition: all .25s;
     right: 134px;
 }
 .btn-monitor{
+    pointer-events: auto;
     transition: all .2s;
     right: 224px;
 }
-
+.btn-copy{
+    pointer-events: auto;
+    transition: all .3s;
+    right: 44px;
+    opacity: 1;
+}
 .btn-cam-action div img{
     height: 22px;
     width: 30px;
@@ -211,8 +224,8 @@ video#myCamVideo{
 .connecting-spinner {
       /*display: inline-block;*/
       position: absolute;
-      left: calc(50% - 68px);
-      top: calc(50% - 68px);
+      left: calc(50% - 62px);
+      top: calc(50% - 62px);
 
 
       width: 130px;
@@ -326,24 +339,6 @@ body {
     }
 
     
-}
-@media (max-aspect-ratio: 1/1) {
-    .game-overlay {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        flex-direction: row;
-        align-items: flex-end;
-    }
-
-    .sidebar > div {
-        max-width: 21%;
-    }
-
-    .sidebar > div:hover {
-        max-width: 25%;
-    }
 }
 
 #game {
@@ -502,6 +497,7 @@ input[type=range]:focus::-ms-fill-upper {
     position: absolute;
     width: 100%;
     height: 100%;
+    pointer-events: none;
     /* TODO: DO WE NEED FLEX HERE???? WE WANT A SIDEBAR OF EXACTLY 25% (note: flex useful for direction!!!) */
 }
 
@@ -537,6 +533,7 @@ input[type=range]:focus::-ms-fill-upper {
 .sidebar {
     flex: 0 0 25%;
     display: flex;
+    pointer-events: none;
 }
 
 .sidebar > div {
@@ -793,7 +790,7 @@ input[type=range]:focus::-ms-fill-upper {
     right: 0;
 }
 .main-container .audio-playing img{
-    width: 30px;
+    /*width: 30px;*/
     border-radius: 50%;
     background-color: #ffda01;
     padding: 10px;
@@ -801,6 +798,7 @@ input[type=range]:focus::-ms-fill-upper {
 .main-container .audio-playing p{
     color: white;
     margin-left: 10px;
+    margin-top: 14px;
 }
 
 /* VIDEO QUALITY */
@@ -850,10 +848,10 @@ div.modal-report-user{
 
 .modal-report-user img{
     position: absolute;
-    height: 50px;
-    width: 50px;
+    height: 24px;
+    width: 24px;
     z-index: 999;
-    left: calc(50% - 25px);
+    left: calc(50% - 12px);
     top: 10px;
 }
 
@@ -1017,7 +1015,7 @@ div.modal-report-user{
     background-color: #2d2d2dba;
     right: 34px;
     margin: 0px;
-    padding: 6px 0px;
+    padding: 2px 0px;
     border-radius: 15px;
     border: none;
     color: white;
@@ -1032,7 +1030,7 @@ div.modal-report-user{
 
 .discussion .messages{
     position: absolute;
-    height: calc(100% - 360px);
+    height: calc(100% - 390px);
     overflow-x: hidden;
     overflow-y: auto;
     max-width: calc(100% - 40px);
@@ -1073,18 +1071,18 @@ div.modal-report-user{
 .discussion .send-message{
     position: absolute;
     bottom: 45px;
-    width: 220px;
+    width: 200px;
     height: 26px;
     margin-bottom: 10px;
 }
 
 .discussion .send-message input{
     position: absolute;
-    width: calc(100% - 10px);
-    height: 20px;
+    width: calc(100% - 20px);
+    height: 30px;
     background-color: #171717;
     color: white;
-    border-radius: 15px;
+    border-radius: 10px;
     border: none;
     padding: 6px;
 }
@@ -1117,10 +1115,11 @@ div.action p.action-body{
     padding: 10px;
     background-color: #2d2d2dba;
     color: #fff;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 500;
     text-align: center;
-    max-width: 150px;
-    margin-left: calc(50% - 75px);
+    max-width: 250px;
+    margin-left: calc(50% - 125px);
     border-radius: 15px;
 }
 .popUpElement{

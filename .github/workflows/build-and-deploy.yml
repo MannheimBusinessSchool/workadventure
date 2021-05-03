@@ -11,7 +11,7 @@ env:
 jobs:
 
   build-front:
-
+    if: ${{ github.event.release || contains(github.event.pull_request.labels.*.name, 'deploy') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -40,7 +40,7 @@ jobs:
           add_git_labels: true
 
   build-back:
-
+    if: ${{ github.event.release || contains(github.event.pull_request.labels.*.name, 'deploy') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -69,7 +69,7 @@ jobs:
           add_git_labels: true
 
   build-pusher:
-
+    if: ${{ github.event.release || contains(github.event.pull_request.labels.*.name, 'deploy') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -98,7 +98,7 @@ jobs:
           add_git_labels: true
 
   build-uploader:
-
+    if: ${{ github.event.release || contains(github.event.pull_request.labels.*.name, 'deploy') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -127,7 +127,7 @@ jobs:
           add_git_labels: true
 
   build-maps:
-
+    if: ${{ github.event.release || contains(github.event.pull_request.labels.*.name, 'deploy') }}
     runs-on: ubuntu-latest
 
     steps:
