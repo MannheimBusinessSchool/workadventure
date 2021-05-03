@@ -9,40 +9,8 @@ env:
   DOCKER_BUILDKIT: 1
 
 jobs:
-
-  build-front:
-    if: ${{ github.event.release || contains(github.event.pull_request.labels.*.name, 'deploy') }}
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: "Build and push front image"
-        uses: docker/build-push-action@v2
-        with:
-          file: front/Dockerfile
-          path: ./
-          push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-front:latest
-          add_git_labels: true
-
   build-back:
-    if: ${{ github.event.release || contains(github.event.pull_request.labels.*.name, 'deploy') }}
     runs-on: ubuntu-latest
-
     steps:
 
       - name: Checkout
@@ -69,9 +37,7 @@ jobs:
           add_git_labels: true
 
   build-pusher:
-    if: ${{ github.event.release || contains(github.event.pull_request.labels.*.name, 'deploy') }}
     runs-on: ubuntu-latest
-
     steps:
 
       - name: Checkout
@@ -98,9 +64,7 @@ jobs:
           add_git_labels: true
 
   build-uploader:
-    if: ${{ github.event.release || contains(github.event.pull_request.labels.*.name, 'deploy') }}
     runs-on: ubuntu-latest
-
     steps:
 
       - name: Checkout
@@ -127,9 +91,7 @@ jobs:
           add_git_labels: true
 
   build-maps:
-    if: ${{ github.event.release || contains(github.event.pull_request.labels.*.name, 'deploy') }}
     runs-on: ubuntu-latest
-
     steps:
 
       - name: Checkout
