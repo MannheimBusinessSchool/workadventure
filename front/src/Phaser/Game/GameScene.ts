@@ -248,6 +248,7 @@ export class GameScene extends DirtyScene implements CenterListener {
             // 127.0.0.1, localhost and *.localhost are considered secure, even on HTTP.
             // So if we are in https, we can still try to load a HTTP local resource (can be useful for testing purposes)
             // See https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts#when_is_a_context_considered_secure
+            console.log(file)
             const url = new URL(file.src);
             const host = url.host.split(':')[0];
             if (window.location.protocol === 'https:' && file.src === this.MapUrlFile && (host === '127.0.0.1' || host === 'localhost' || host.endsWith('.localhost')) && this.originalMapUrl === undefined) {
@@ -941,8 +942,9 @@ ${escapedMessage}
     private onMapExit(exitKey: string) {
         if (this.mapTransitioning) return;
         this.mapTransitioning = true;
-        const {roomId, hash} = Room.getIdFromIdentifier(exitKey, this.MapUrlFile, this.instance);
+        let {roomId, hash} = Room.getIdFromIdentifier(exitKey, this.MapUrlFile, this.instance);
         if (!roomId) throw new Error('Could not find the room from its exit key: '+exitKey);
+        roomId = roomId.replace('<group>', this.room.getInstance().split('/')[0])
         urlManager.pushStartLayerNameToUrl(hash);
         if (roomId !== this.scene.key) {
             if (this.scene.get(roomId) === null) {
@@ -1056,7 +1058,11 @@ ${escapedMessage}
     }
 
     private getExitUrl(layer: ITiledMapLayer): string|undefined {
-        return this.getProperty(layer, "exitUrl") as string|undefined;
+        let exitUrl = this.getProperty(layer, "exitUrl") as string|undefined
+        if (exitUrl) {
+            exitUrl = exitUrl.replace('<group>', this.room.getInstance().split('/')[0])
+        }
+        return exitUrl;
     }
 
     /**
