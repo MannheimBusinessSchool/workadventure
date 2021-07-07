@@ -1,10 +1,6 @@
 import type {PointInterface} from "../../Connexion/ConnexionModels";
-import type {BodyResourceDescriptionInterface} from "../Entity/PlayerTextures";
+import type {PlayerInterface} from "./PlayerInterface";
 
-export interface AddPlayerInterface {
-    userId: number;
-    name: string;
-    characterLayers: BodyResourceDescriptionInterface[];
+export interface AddPlayerInterface extends PlayerInterface {
     position: PointInterface;
-    companion: string|null;
 }
