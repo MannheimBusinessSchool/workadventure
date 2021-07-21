@@ -2,7 +2,7 @@ const SECRET_KEY = process.env.SECRET_KEY || "THECODINGMACHINE_SECRET_KEY";
 const MINIMUM_DISTANCE = process.env.MINIMUM_DISTANCE ? Number(process.env.MINIMUM_DISTANCE) : 64;
 const GROUP_RADIUS = process.env.GROUP_RADIUS ? Number(process.env.GROUP_RADIUS) : 48;
 const ALLOW_ARTILLERY = process.env.ALLOW_ARTILLERY ? process.env.ALLOW_ARTILLERY == "true" : false;
-const ALLOW_PUBLIC_ROOMS = process.env.ALLOW_PUBLIC_ROOMS ? process.env.ALLOW_PUBLIC_ROOMS == "true": false;
+const ALLOW_PUBLIC_ROOMS = process.env.ALLOW_PUBLIC_ROOMS ? process.env.ALLOW_PUBLIC_ROOMS == "true" : false;
 const API_URL = process.env.API_URL || "";
 const ADMIN_API_URL = process.env.ADMIN_API_URL || "";
 const ADMIN_API_TOKEN = process.env.ADMIN_API_TOKEN || "myapitoken";
@@ -28,5 +28,5 @@ export {
     JITSI_ISS,
     SECRET_JITSI_KEY,
     PUSHER_HTTP_PORT,
-    ALLOW_PUBLIC_ROOMS
+    ALLOW_PUBLIC_ROOMS,
 };
