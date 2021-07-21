@@ -25,7 +25,7 @@ import { jwtTokenManager } from "../Services/JWTTokenManager";
 import { adminApi, CharacterTexture, FetchMemberDataByUuidResponse } from "../Services/AdminApi";
 import { SocketManager, socketManager } from "../Services/SocketManager";
 import { emitInBatch } from "../Services/IoSocketHelpers";
-import { ADMIN_API_TOKEN, ADMIN_API_URL, SOCKET_IDLE_TIMER } from "../Enum/EnvironmentVariable";
+import { ADMIN_API_TOKEN, ADMIN_API_URL, SOCKET_IDLE_TIMER, ALLOW_PUBLIC_ROOMS } from "../Enum/EnvironmentVariable";
 import { Zone } from "_Model/Zone";
 import { ExAdminSocketInterface } from "_Model/Websocket/ExAdminSocketInterface";
 import { v4 } from "uuid";
@@ -179,6 +179,19 @@ export class IoSocketController {
                         let memberTextures: CharacterTexture[] = [];
                         const room = await socketManager.getOrCreateRoom(roomId);
                         if (ADMIN_API_URL) {
+                            if (room.public && !ALLOW_PUBLIC_ROOMS) {
+                                return res.upgrade(
+                                    {
+                                        rejected: true,
+                                        message: "Anonymous rooms are disabled",
+                                        status: 403,
+                                    },
+                                    websocketKey,
+                                    websocketProtocol,
+                                    websocketExtensions,
+                                    context
+                                );
+                            }
                             try {
                                 let userData: FetchMemberDataByUuidResponse = {
                                     uuid: v4(),
