@@ -29,7 +29,7 @@ export class EntryScene extends Scene {
                 ErrorScene.showError(new WAError(
                     'Access link incorrect', 
                     'Could not find map. Please check your access link.', 
-                    'If you want more information, you may contact administrator or contact us at: workadventure@thecodingmachine.com'), this.scene);
+                    'If you want more information, you may contact administrator'), this.scene);
             } else {
                 ErrorScene.showError(err, this.scene);
             }
