@@ -2,8 +2,8 @@ name: Build, push and deploy Docker image
 
 on:
   push:
-    branches:
-      - develop
+    tags:
+      - v*
 
 env:
   DOCKER_BUILDKIT: 1
@@ -15,6 +15,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Set env
+        run: echo RELEASE_VERSION=$(echo ${GITHUB_REF:10}) >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -33,7 +36,7 @@ jobs:
           file: back/Dockerfile
           path: ./
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-back:latest
+          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-back:latest,${{ steps.login-ecr.outputs.registry }}/spaces-back:${{ env.RELEASE_VERSION }}
           add_git_labels: true
 
   build-pusher:
@@ -42,6 +45,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Set env
+        run: echo RELEASE_VERSION=$(echo ${GITHUB_REF:10}) >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -60,7 +66,7 @@ jobs:
           file: pusher/Dockerfile
           path: ./
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-pusher:latest
+          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-pusher:latest,${{ steps.login-ecr.outputs.registry }}/spaces-pusher:${{ env.RELEASE_VERSION }}
           add_git_labels: true
 
   build-uploader:
@@ -69,6 +75,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Set env
+        run: echo RELEASE_VERSION=$(echo ${GITHUB_REF:10}) >> $GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -87,32 +96,5 @@ jobs:
           file: uploader/Dockerfile
           path: ./
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-uploader:latest
-          add_git_labels: true
-
-  build-maps:
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: "Build and push front image"
-        uses: docker/build-push-action@v2
-        with:
-          file: maps/Dockerfile
-          path: ./
-          push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-maps:latest
+          tags: ${{ steps.login-ecr.outputs.registry }}/spaces-uploader:latest,${{ steps.login-ecr.outputs.registry }}/spaces-uploader:${{ env.RELEASE_VERSION }}
           add_git_labels: true
