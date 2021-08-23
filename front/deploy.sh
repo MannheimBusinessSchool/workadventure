@@ -18,10 +18,10 @@ else
   TURN_PASSWORD="$REPLY"
 fi
 
-echo -n "Please enter target bucket name [spaces-maps]: "
+echo -n "Please enter target bucket name [spaces-front]: "
 read -r;
 if [ -z "$REPLY" ]; then
-  TARGET_BUCKET="spaces-maps"
+  TARGET_BUCKET="spaces-front"
 else
   TARGET_BUCKET="$REPLY"
 fi
