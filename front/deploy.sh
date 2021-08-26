@@ -26,13 +26,15 @@ else
   TARGET_BUCKET="$REPLY"
 fi
 
-export PUSHER_URL="pusher.$DOMAIN"
-export UPLOADER_URL="uploader.$DOMAIN"
+export PUSHER_URL="https://pusher.$DOMAIN"
+export UPLOADER_URL="https://uploader.$DOMAIN"
 export JITSI_URL="meet.$DOMAIN"
-export STUN_URL="stun.$DOMAIN"
-export TURN_URL="turn.$DOMAIN"
+export STUN_SERVER="stun://stun.$DOMAIN"
+export TURN_SERVER="turns://turn.$DOMAIN"
 export TURN_USER="turnuser"
 export TURN_PASSWORD="$TURN_PASSWORD"
+
+echo "$PUSHER_URL"
 
 export JITSI_PRIVATE_MODE="true"
 
